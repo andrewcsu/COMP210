@@ -62,9 +62,7 @@ public class LinkedList<T> {
         if (Objects.equals(toString(), list2.toString())) {
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
 
