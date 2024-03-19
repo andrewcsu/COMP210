@@ -27,3 +27,12 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/assn04_submission.zip
+/assn03_submission.zip
+/assn05_submission.zip
+/Main.java'; sh test.sh;.java
+/.idea/misc.xml
+/.idea/modules.xml
+/test.sh
+/.idea/uiDesigner.xml
+/.idea/vcs.xml
