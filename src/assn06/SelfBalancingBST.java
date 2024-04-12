@@ -2,7 +2,8 @@ package assn06;
 
 public interface SelfBalancingBST<T extends Comparable<T>> {
 
-    AVLTree<T> test();
+
+    SelfBalancingBST<T> test();
 
     /**
      * @return true if the tree is empty

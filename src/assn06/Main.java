@@ -4,19 +4,38 @@ public class Main {
     public static void main(String[] args) {
 
         SelfBalancingBST<Integer> avl_bst = new AVLTree<Integer>();
-        avl_bst = avl_bst.insert(4);
-        avl_bst = avl_bst.insert(5);
-        avl_bst = avl_bst.insert(6);
+        // Insert 47, 52, 60, 3, 7, 10, 58 into the avl_bst
+        avl_bst = avl_bst.insert(47);
+        avl_bst = avl_bst.insert(52);
+        avl_bst = avl_bst.insert(60);
+        avl_bst = avl_bst.insert(3);
+        avl_bst = avl_bst.insert(7);
+        avl_bst = avl_bst.insert(10);
+        avl_bst = avl_bst.insert(58);
+//        System.out.println(avl_bst.size());
+        avl_bst.printTree();
+        avl_bst = avl_bst.remove(7);
+        System.out.println();
+//        System.out.println(avl_bst.size());
+        avl_bst.printTree();
+        avl_bst = avl_bst.remove(3);
+        System.out.println();
+//        System.out.println(avl_bst.size());
+        avl_bst.printTree();
+        avl_bst = avl_bst.remove(10);
+        System.out.println();
+//        System.out.println(avl_bst.size());
+        avl_bst.printTree();
 
-        System.out.println(avl_bst.height());
-        System.out.println(avl_bst.size());
-        avl_bst.printTree();
+
+
+//        System.out.println(avl_bst.height());
+//        System.out.println(avl_bst.size());
+//        avl_bst.printTree();
         System.out.println();
-        System.out.println(avl_bst.findMax());
-        System.out.println(avl_bst.findMin());
-        avl_bst= avl_bst.test();
-        System.out.println();
-        avl_bst.printTree();
+//        System.out.println(avl_bst.findMax());
+//        System.out.println(avl_bst.findMin());
+
 
 
 
