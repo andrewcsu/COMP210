@@ -4,11 +4,11 @@ import java.util.*;
 
 import static java.lang.Math.abs;
 
+@SuppressWarnings("unchecked")
 public class PasswordManager<K,V> implements Map<K,V> {
     private static final String MASTER_PASSWORD = "password321";
     private Account<K, V>[] _passwords;
 
-    @SuppressWarnings("unchecked")
     public PasswordManager() {
         _passwords = (Account<K, V>[]) new Account[50];
     }
@@ -24,7 +24,7 @@ public class PasswordManager<K,V> implements Map<K,V> {
             _passwords[index] = accnt;
 //            System.out.println(key + " " + value);
         } else {
-            Account curr = _passwords[index];
+            Account<K, V> curr = _passwords[index];
             while (curr != null && curr.getNext() != null) {
                 curr = curr.getNext();
             }
@@ -41,12 +41,12 @@ public class PasswordManager<K,V> implements Map<K,V> {
         int hash = key.hashCode();
         int index = abs(hash) % _passwords.length;
         if (_passwords[index] != null) {
-            Account curr = _passwords[index];
-            while (curr != null && curr.getWebsite() != key) {
+            Account<K, V> curr = _passwords[index];
+            while (curr != null && !curr.getWebsite().equals(key)) {
                 curr = curr.getNext();
             }
-            if (curr != null) {
-                return (V) curr.getPassword();
+            if (curr != null && curr.getWebsite().equals(key)) {
+                return curr.getPassword();
             }
         }
         return null;
@@ -58,7 +58,7 @@ public class PasswordManager<K,V> implements Map<K,V> {
         int size = 0;
         for (int i = 0; i < _passwords.length; i++) {
             if (_passwords[i] != null) {
-                Account curr = _passwords[i];
+                Account<K, V> curr = _passwords[i];
                 size++;
                 while (curr.getNext() != null) {
                     size++;
@@ -75,11 +75,11 @@ public class PasswordManager<K,V> implements Map<K,V> {
         Set<K> ret = new HashSet<K>();
         for (int i = 0; i < _passwords.length; i++) {
             if (_passwords[i] != null) {
-                Account curr = _passwords[i];
-                ret.add((K) curr.getWebsite());
+                Account<K, V> curr = _passwords[i];
+                ret.add(curr.getWebsite());
                 while (curr.getNext() != null) {
                     curr = curr.getNext();
-                    ret.add((K) curr.getWebsite());
+                    ret.add(curr.getWebsite());
                 }
             }
         }
@@ -93,18 +93,19 @@ public class PasswordManager<K,V> implements Map<K,V> {
         int index = abs(hash) % _passwords.length;
         V password = null;
 
-        if (_passwords[index] != null && _passwords[index].getWebsite() != key) {
-            Account curr = _passwords[index];
-            while (curr.getNext() != null && curr.getNext().getWebsite() != key) {
+        if (_passwords[index] != null && !_passwords[index].getWebsite().equals(key)) {
+            Account<K, V> curr = _passwords[index];
+            while (curr.getNext() != null && !curr.getNext().getWebsite().equals(key)) {
                 curr = curr.getNext();
             }
-            if (curr != null) {
-                password = (V) curr.getNext().getPassword();
+            if (curr != null && curr.getNext().getWebsite().equals(key)) {
+                Account<K, V> temp = curr.getNext();
+                password = temp.getPassword();
                 curr.setNext(curr.getNext().getNext());
                 return password;
             }
         } else if (_passwords[index] != null) {
-            password = (V) _passwords[index].getPassword();
+            password = _passwords[index].getPassword();
             _passwords[index] = _passwords[index].getNext();
             return password;
         }
@@ -118,18 +119,19 @@ public class PasswordManager<K,V> implements Map<K,V> {
         List<K> ret = new ArrayList<>();
         for (int i = 0; i < _passwords.length; i++) {
             if (_passwords[i] != null) {
-                Account curr = _passwords[i];
+                Account<K, V> curr = _passwords[i];
                 if (curr.getPassword() == value && !ret.contains(curr.getWebsite()) ) {
-                    ret.add((K) curr.getWebsite());
+                    ret.add(curr.getWebsite());
                 }
                 while (curr != null) {
                     if (curr.getPassword().equals(value) && !ret.contains(curr.getWebsite())) {
-                        ret.add((K) curr.getWebsite());
+                        ret.add(curr.getWebsite());
                     }
                     curr = curr.getNext();
                 }
             }
         }
+        if (ret.isEmpty()) { return null; }
         return ret;
     }
 
@@ -147,7 +149,7 @@ public class PasswordManager<K,V> implements Map<K,V> {
         Random random = new Random();
 
         // TODO: Ensure the minimum length is 4
-
+        if (length < 4) { length = 4; }
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
                 .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
